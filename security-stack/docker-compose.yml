@@ -1,5 +1,8 @@
 version: "3.5"
 
+volumes:
+  letsencrypt: {}
+
 services: 
 
   traefik:
@@ -33,7 +36,7 @@ services:
     container_name: nessus
     restart: always
     ports: 
-      - "443:8834"
+      - "8443:8834"
     environment: 
       - ACTIVATION_CODE=${ACTIVATION_CODE}
       - USERNAME=${USERNAME}

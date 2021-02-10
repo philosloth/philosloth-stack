@@ -1,6 +1,7 @@
 desktop.ini
 atlassian-stack/desktop.ini
 security-stack/desktop.ini
+vpn-server/desktop.ini
 atlassian-stack/.env
 security-stack/.env
-atlassian-stack/.env
+vpn-server/.env
