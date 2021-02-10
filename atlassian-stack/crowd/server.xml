@@ -14,7 +14,7 @@
                    port="8095"
                    secure="true"
                    scheme="https"
-                   proxyName="crowd.philosloth.tech"
+                   proxyName="your.domain.tld"
                    proxyPort="443"
                    redirectPort="8443"
                    useBodyEncodingForURI="true"
