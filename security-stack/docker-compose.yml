@@ -1,0 +1,50 @@
+version: "3.5"
+
+services: 
+
+  traefik:
+    image: "${TRAEFIK_IMAGE}"
+    container_name: "traefik"
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.https.address=:${HTTPS}"
+      - "--certificatesresolvers.${PROVIDER}.acme.dnschallenge=true"
+      - "--certificatesresolvers.${PROVIDER}.acme.dnschallenge.provider=${PROVIDER}"
+      - "--certificatesresolvers.${PROVIDER}.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.${PROVIDER}.acme.email=${ACME_EMAIL}"
+    environment:
+      CF_API_EMAIL: ${CF_API_EMAIL}
+      CF_API_KEY: ${CF_API_KEY}
+    ports:
+      - "${HTTPS}:${HTTPS}"
+    volumes:
+      - "${DOCKER_SOCK}:${DOCKER_SOCK}:ro"
+      - "${LETSENCRYPT}:/${LETSENCRYPT}"
+    restart: unless-stopped
+    depends_on: 
+      - nessus
+    stop_grace_period: 30s
+
+  nessus:
+    image: tenableofficial/nessus:latest
+    container_name: nessus
+    restart: always
+    ports: 
+      - "443:8834"
+    environment: 
+      - ACTIVATION_CODE=${ACTIVATION_CODE}
+      - USERNAME=${USERNAME}
+      - PASSWORD=${PASSWORD}
+    labels:
+      - "traefik.enable=true"
+      # Web
+      - "traefik.http.routers.nessus.rule=Host(`$NESSUS_SERVER_PROXY_NAME`)"
+      - "traefik.http.routers.nessus.tls=true"
+      - "traefik.http.routers.nessus.tls.certresolver=${PROVIDER}"
+      - "traefik.http.routers.nessus.entrypoints=https"
+      - "traefik.http.routers.nessus.service=nessus-web"
+      - "traefik.http.services.nessus-web.loadbalancer.server.port=${NESSUS_DEFAULT_PORT}"
+    stop_grace_period: 1m30s

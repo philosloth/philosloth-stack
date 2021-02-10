@@ -11,7 +11,7 @@ services:
     image: "${TRAEFIK_IMAGE}"
     container_name: "traefik"
     command:
-      - "--log.level=DEBUG"
+      - "--log.level=WARNING"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
