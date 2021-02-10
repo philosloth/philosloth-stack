@@ -40,7 +40,7 @@ services:
     image: ${CROWD_DB_IMAGE}
     container_name: crowd-db
     ports:
-      - ${CROWD_DB_PORT}:${POSTGRES_PORT}
+      - "${CROWD_DB_PORT}:${POSTGRES_PORT}"
     environment:
       POSTGRES_DB: ${CROWD_DB}
       POSTGRES_USER: ${CROWD_DB_USER}
@@ -73,7 +73,7 @@ services:
       - "traefik.http.routers.crowd.service=crowd-web"
       - "traefik.http.services.crowd-web.loadbalancer.server.port=${CROWD_DEFAULT_PORT}"
     ports: 
-      - "${CROWD_PORT}:${CROWD_PORT}"
+      - "8021:${CROWD_PORT}"
       - "${CROWD_DEFAULT_PORT}:${CROWD_DEFAULT_PORT}"
     environment:
       SERVER_PROXY_NAME: ${CROWD_SERVER_PROXY_NAME}
